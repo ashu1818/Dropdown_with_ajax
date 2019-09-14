@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm())
+{
+    <table class="table table-responsive">
+        <tr>
+            <td>
+                Select Country
+            </td>
+            <td>
+                Select State
+            </td>
+            <td>
+                Select City
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DropDownList("Country", null, "Select Country", htmlAttributes: new { @class = "form-control" })
+            </td>
+            <td>
+                @Html.DropDownList("State", null, "Select State", htmlAttributes: new { @class = "form-control" })
+            </td>
+            <td>
+                @Html.DropDownList("City", null, "Select Country", htmlAttributes: new { @class = "form-control" })
+            </td>
+        </tr>
+    </table>
+
+
+    <script>
+        $(document).ready(function () {
+            $("#Country").change(function () {
+                //Location/getStatesByCountryId/1
+
+                var StateUrl = "@Url.Action("getStatesByCountryId","Location")/" + $(this).val();
+
+                $.getJSON(StateUrl, null, function (data) {
+
+                    var htmlState = "<option>Select State</option>"
+
+                    $.each(data, function (i, v) {
+                        htmlState += `<option value="${v.StateId}">${v.StateName}</option>`;
+                    });
+
+                    $("#State").html(htmlState); 
+                });
+
+            });
+
+
+                $("#City").change(function () {
+                //Location/getStatesByCountryId/1
+
+                var CityUrl = "@Url.Action("getCitiesByStateId","Location")/" + $(this).val();
+
+                $.getJSON(CityUrl, null, function (data) {
+
+                    var htmlCity = "<option>Select City</option>"
+
+                    $.each(data, function (i, v) {
+                        htmlCity += `<option value="${v.CityId}">${v.CityName}</option>`;
+                    });
+
+                    $("#City").html(htmlCity); 
+                });
+
+            });
+        });
+    </script>
+}
+
